@@ -39,7 +39,7 @@ Currently in early development.
 - Add tests
 
 ## Folder Structure
-
+```
 SaltForge-C/
 ├── include/
 │   ├── app.h
@@ -51,6 +51,7 @@ SaltForge-C/
 ├── Makefile
 ├── README.md
 └── .gitignore
+```
 
 ## Build
 
