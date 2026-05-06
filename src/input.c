@@ -1,9 +1,7 @@
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 
 #include "input.h"
-#include "app.h"
 
 
 /* 
@@ -43,13 +41,46 @@ int validate_password(int password_size, int password_limit) {
 
 
 /* 
+ * Function check if the text is empty & return '/0'
+ * */
+int is_empty_input(const char* text) {
+    return text[0] == '\0';
+}
+
+
+/* 
  * Ask user password & return it
  * */
-char* ask_password(char* user_password, int password_limit) {
+void ask_password(char* user_password, int password_limit) {
     printf("Enter password: ");
-    fgets(user_password, password_limit, stdin); 
+
+    if (fgets(user_password, password_limit, stdin) == NULL) {
+        user_password[0] = '\0';
+        return;
+    } 
     remove_line(user_password);
-    return user_password;
+}
+
+
+/* 
+ * Ask the user to write the confirm password
+ * */
+void ask_confirm_password(char* confirm_password, int password_limit) {
+    printf("Confirm password: ");
+
+    if (fgets(confirm_password, password_limit, stdin) == NULL) {
+        confirm_password[0] = '\0';
+        return;
+    }
+    remove_line(confirm_password);
+}
+
+
+/* 
+ * Try to match the user password with the confirm one
+ * */
+int password_match(const char* password, const char* confirm_password) {
+    return strcmp(password, confirm_password) == 0;
 }
 
 
@@ -58,9 +89,23 @@ char* ask_password(char* user_password, int password_limit) {
  * */
 int get_password_from_user(void) {
     char password[MAXIMUM_PASSWORD];
+    char confirm_password[MAXIMUM_PASSWORD];
 
     ask_password(password, MAXIMUM_PASSWORD);
-    printf("Your password is \"%s\"\n", password);
+    
+    if (is_empty_input(password)) {
+        printf("Password can't be empty.\n");
+        return 1;
+    }
+
+    ask_confirm_password(confirm_password, MAXIMUM_PASSWORD);
+
+    if (!password_match(password, confirm_password)) {
+        printf("Password do not match.\n");
+        return 1;
+    }
+    
+    printf("Password accepted.\n");
 
     return 0;
 }
