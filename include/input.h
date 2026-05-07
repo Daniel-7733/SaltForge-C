@@ -11,5 +11,6 @@ void ask_password(char* user_password, int password_limit);
 void ask_confirm_password(char* confirm_password, int password_limit); 
 int password_match(const char* password, const char* confirm_password); 
 int get_password_from_user(void);
+int integer_convertor(int buffer_limit, int minimum_number, int maximum_number);
 
 #endif
