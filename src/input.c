@@ -105,17 +105,22 @@ int get_password_from_user(void) {
     return 0;
 }
 
-int integer_convertor(int buffer_limit, int minimum_number, int maximum_number) {
-    char buffer[buffer_limit];
-    printf("Enter choice: ");
+int integer_convertor(int minimum_number, int maximum_number) {
+    char buffer[BUFFER_LIMIT];
 
     while (true) {
 
+        printf("Enter choice: ");
         // Checks if reading from the keyboard failed or if the user signaled
         // EOF (Ctrl+D)
         if (fgets(buffer, sizeof(buffer), stdin) == NULL) {
             printf("Input error.\n");
             continue;
+        }
+
+        // Detect truncated input
+        if (buffer[strlen(buffer) - 1] != '\n') {
+            clear_buffer();
         }
 
         char *endptr;
@@ -125,7 +130,6 @@ int integer_convertor(int buffer_limit, int minimum_number, int maximum_number) 
         // were found at all)
         if (endptr == buffer) {
             printf("Invalid input. Please enter a number.\n");
-            clear_buffer();
             continue;
         }
 
@@ -137,7 +141,6 @@ int integer_convertor(int buffer_limit, int minimum_number, int maximum_number) 
         // number
         if (*endptr != '\n' && *endptr != '\0') {
             printf("Invalid input. Please enter only a number.\n");
-            clear_buffer();
             continue;
         }
 
@@ -146,7 +149,6 @@ int integer_convertor(int buffer_limit, int minimum_number, int maximum_number) 
         if (value < minimum_number || value > maximum_number) {
             printf("Please enter a number between %d and %d.\n", minimum_number,
                    maximum_number);
-            clear_buffer();
             continue;
         }
 
