@@ -1,6 +1,7 @@
 #include <stdio.h> 
 #include <stdbool.h>
 
+#include "saltgenerator.h"
 #include "password.h"
 #include "input.h"
 #include "app.h"
@@ -27,6 +28,12 @@ int menu(void) {
             case 1:
                 get_password_from_user();
                 printf("Hash password\n");
+                
+                // generate salt
+                unsigned char salt[SALT_SIZE];
+                generate_salt(salt, SALT_SIZE);
+                // print_salt_hex(salt, SALT_SIZE);
+
                 break;
             case 2:
                 printf("verify password\n");

@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -Iinclude
-SRC = src/main.c src/app.c src/input.c src/password.c
+SRC = src/main.c src/app.c src/input.c src/password.c src/saltgenerator.c
 OUT = saltforge
 
 all:
