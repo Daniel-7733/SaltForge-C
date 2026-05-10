@@ -5,7 +5,14 @@
 #include "input.h"
 #include "app.h"
 
+
 int run_app(void) {
+
+    menu();
+    return 0;
+}
+
+int menu(void) {
 
     while (true) {
 
@@ -32,7 +39,6 @@ int run_app(void) {
                 break;
         }
     }
-
     return 0;
 }
 
