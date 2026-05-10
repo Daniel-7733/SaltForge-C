@@ -1,6 +1,7 @@
 #include <stdio.h> 
 #include <stdbool.h>
 
+#include "password.h"
 #include "input.h"
 #include "app.h"
 
