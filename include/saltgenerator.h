@@ -7,6 +7,6 @@
 
 int generate_salt(unsigned char* salt, size_t salt_size);
 void print_salt_hex(const unsigned char* salt, size_t salt_size);
-int display_salt(void);
+void salt_to_hex(const unsigned char* salt, size_t salt_size, char* salt_hex);
 
 #endif

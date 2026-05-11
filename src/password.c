@@ -53,8 +53,8 @@ int password_match(const char *password, const char *confirm_password) {
  * A place that user give the password. Function will remove \n & clean the
  * buffer. In Addition, it will control the size of password.
  * */
-int get_password_from_user(void) {
-    char password[MAXIMUM_PASSWORD];
+int get_password_from_user(char* password) {
+    // char password[MAXIMUM_PASSWORD];
     char confirm_password[MAXIMUM_PASSWORD];
 
     ask_password(password, MAXIMUM_PASSWORD);

@@ -23,16 +23,12 @@ void print_salt_hex(const unsigned char* salt, size_t salt_size) {
     printf("\n");
 }
 
-/* This is just for debug; It just print the generated salt */
-int display_salt(void) {
-    unsigned char salt[SALT_SIZE];
-
-    if (generate_salt(salt, SALT_SIZE) != 0) {
-        return 1;
+/* The salt generated */
+void salt_to_hex(const unsigned char* salt, size_t salt_size, char* salt_hex) {
+    for (size_t i = 0; i < salt_size; i++) {
+        sprintf(salt_hex + (i * 2), "%02x", salt[i]); 
     }
 
-    printf("Salt: ");
-    print_salt_hex(salt, SALT_SIZE);
-
-    return 0;
+    salt_hex[salt_size * 2] = '\0';
 }
+
