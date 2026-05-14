@@ -1,14 +1,15 @@
 #include <stdio.h> 
+#include <string.h>
 #include <stdbool.h>
 
 #include "saltgenerator.h"
 #include "password.h"
 #include "input.h"
+#include "hash.h"
 #include "app.h"
 
 
 int run_app(void) {
-
     menu();
     return 0;
 }
@@ -41,6 +42,19 @@ int menu(void) {
                 printf("Salt hex: %s\n", salt_hex);
                 printf("Password+Salt hex is: %s%s\n", password, salt_hex);
                 //print_salt_hex(salt, SALT_SIZE);
+                char hash[SHA256_HEX_SIZE];
+
+                if (!sha256_hex(
+                            (const unsigned char*)password,
+                            strlen(password),
+                            hash,
+                            sizeof(hash)
+                            )) {
+                    printf("Hashing failed.\n");
+                    return 1;
+                }
+
+                printf("Hash: %s\n", hash);
                 break;
                     }
             case 2:
