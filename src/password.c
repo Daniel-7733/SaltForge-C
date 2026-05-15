@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "saltgenerator.h"
 #include "password.h"
 #include "input.h"
+#include "hash.h"
 
 /*
  * This Function won't let the password be longer than the limit or samller then
@@ -75,3 +77,40 @@ int get_password_from_user(char* password) {
 
     return 0;
 }
+
+
+int process_the_password(char* password) {
+    unsigned char salt[SALT_SIZE]; 
+    char salt_hex[(SALT_SIZE * 2) + 1];  // salt is 16 bytes then the hex will be 16 bytes x 2 hex (chars = 32 chars) + 1 (for '\0')
+    char password_with_salt[(MAXIMUM_PASSWORD + (SALT_SIZE * 2) + 1)];
+    char hash[SHA256_HEX_SIZE];
+
+    if (get_password_from_user(password) != 0) return 1;
+    if (generate_salt(salt, SALT_SIZE) != 0) return 1;
+
+    salt_to_hex(salt, SALT_SIZE, salt_hex);
+
+    snprintf(
+            password_with_salt,
+            sizeof(password_with_salt),
+            "%s%s",
+            password,
+            salt_hex
+            );
+
+
+    if (!sha256_hex(
+                (const unsigned char*)password,
+                strlen(password),
+                hash,
+                sizeof(hash)
+                )) {
+        printf("Hashing failed.\n");
+        return 1;
+    }
+
+    printf("Hash: %s\n", hash);
+
+    return 0;
+}
+

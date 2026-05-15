@@ -1,5 +1,4 @@
 #include <stdio.h> 
-#include <string.h>
 #include <stdbool.h>
 
 #include "saltgenerator.h"
@@ -27,34 +26,9 @@ int menu(void) {
 
         switch (user_choice) {
             case 1: {
-                printf("Hash password\n");
                 char password[MAXIMUM_PASSWORD];
-                unsigned char salt[SALT_SIZE];
-                // salt is 16 bytes then the hex will be 16 bytes x 2 hex (chars = 32 chars) + 1 (for '\0')
-                char salt_hex[(SALT_SIZE * 2) + 1]; 
-
-                if (get_password_from_user(password) != 0) break;
-                if (generate_salt(salt, SALT_SIZE) != 0) break;
-
-                salt_to_hex(salt, SALT_SIZE, salt_hex);
-
-                printf("Password: %s\n", password);
-                printf("Salt hex: %s\n", salt_hex);
-                printf("Password+Salt hex is: %s%s\n", password, salt_hex);
-                //print_salt_hex(salt, SALT_SIZE);
-                char hash[SHA256_HEX_SIZE];
-
-                if (!sha256_hex(
-                            (const unsigned char*)password,
-                            strlen(password),
-                            hash,
-                            sizeof(hash)
-                            )) {
-                    printf("Hashing failed.\n");
-                    return 1;
-                }
-
-                printf("Hash: %s\n", hash);
+                printf("Hash password\n");
+                process_the_password(password);
                 break;
                     }
             case 2:
