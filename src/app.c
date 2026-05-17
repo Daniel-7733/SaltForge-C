@@ -3,6 +3,7 @@
 
 #include "saltgenerator.h"
 #include "password.h"
+#include "storage.h"
 #include "input.h"
 #include "hash.h"
 #include "app.h"
@@ -32,6 +33,10 @@ int menu(void) {
                 break;
                     }
             case 2:
+                // 1. get the user input - The password.
+                // 2. check if the password is in the dataStorage
+                // 3. Verify if the password exist or not
+                read_data(); // Will print all the hash password
                 printf("verify password\n");
                 break;
             case 3:
