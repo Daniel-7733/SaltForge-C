@@ -3,6 +3,7 @@
 
 #include "saltgenerator.h"
 #include "password.h"
+#include "storage.h"
 #include "input.h"
 #include "hash.h"
 
@@ -78,6 +79,12 @@ int get_password_from_user(char* password) {
     return 0;
 }
 
+/* 
+ * "This is multi purpose function; It use all function to get one result"
+ * This function will process the password.
+ * It hash the password and make a salt, then combine the hash with salt. 
+ * At the end it save it
+ * */
 
 int process_the_password(char* password) {
     unsigned char salt[SALT_SIZE]; 
@@ -110,6 +117,8 @@ int process_the_password(char* password) {
     }
 
     printf("Hash: %s\n", hash);
+
+    save(salt_hex, hash);
 
     return 0;
 }
