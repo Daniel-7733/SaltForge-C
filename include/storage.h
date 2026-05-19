@@ -1,7 +1,7 @@
-#ifndef STORAGE_H 
+#ifndef STORAGE_H
 #define STORAGE_H
 
-int save(char* salt, char* hash_with_salt);
-int read_data();
+int save_hash(const char* salt_hex, const char* hash);
+int load_hash(char* salt_hex, int salt_size, char* hash, int hash_size);
 
 #endif

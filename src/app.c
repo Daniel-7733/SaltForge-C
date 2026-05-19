@@ -30,14 +30,13 @@ int menu(void) {
                 char password[MAXIMUM_PASSWORD];
                 printf("Hash password\n");
                 process_the_password(password);
+                printf("\n");
                 break;
                     }
             case 2:
-                // 1. get the user input - The password.
-                // 2. check if the password is in the dataStorage
-                // 3. Verify if the password exist or not
-                read_data(); // Will print all the hash password
                 printf("verify password\n");
+                verify_password();
+                printf("\n");
                 break;
             case 3:
                 printf("Good Bye.\n");

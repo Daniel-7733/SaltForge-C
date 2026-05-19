@@ -7,6 +7,67 @@
 #include "input.h"
 #include "hash.h"
 
+
+
+/**
+ * @brief Performs password verification by comparing user input against stored credentials.
+ *
+ * This function handles the entire authentication workflow: it loads the stored salt and hash,
+ * prompts the user for their password, concatenates the input with the salt, and hashes the result. 
+ * Finally, it compares the freshly generated hash with the stored hash to verify the password.
+ *
+ * @return int Status code of the operational workflow.
+ * @retval 0  Success: The verification process completed (regardless of whether the password matched).
+ * @retval 1  Failure: Process aborted due to file read errors, user input failure, or hashing failure.
+ */
+int verify_password(void) {
+    char input_password[MAXIMUM_PASSWORD];
+    char stored_salt_hex[(SALT_SIZE * 2) + 1];
+    char stored_hash[SHA256_HEX_SIZE];
+
+    char password_with_salt[MAXIMUM_PASSWORD + (SALT_SIZE * 2) + 1];
+    char new_hash[SHA256_HEX_SIZE];
+
+    if (load_hash(
+            stored_salt_hex,
+            sizeof(stored_salt_hex),
+            stored_hash,
+            sizeof(stored_hash)
+        ) != 0) {
+        return 1;
+    }
+
+    if (get_password_from_user(input_password) != 0) {
+        return 1;
+    }
+
+    snprintf(
+        password_with_salt,
+        sizeof(password_with_salt),
+        "%s%s",
+        input_password,
+        stored_salt_hex
+    );
+
+    if (!sha256_hex(
+            (const unsigned char*)password_with_salt,
+            strlen(password_with_salt),
+            new_hash,
+            sizeof(new_hash)
+        )) {
+        return 1;
+    }
+
+    if (strcmp(new_hash, stored_hash) == 0) {
+        printf("Password correct.\n");
+    } else {
+        printf("Password incorrect.\n");
+    }
+
+    return 0;
+}
+
+
 /*
  * This Function won't let the password be longer than the limit or samller then
  * 1 Use strlen() for password_size
@@ -118,7 +179,7 @@ int process_the_password(char* password) {
 
     printf("Hash: %s\n", hash);
 
-    save(salt_hex, hash);
+    save_hash(salt_hex, hash);
 
     return 0;
 }

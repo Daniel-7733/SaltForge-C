@@ -3,6 +3,7 @@
 
 #define MAXIMUM_PASSWORD 128 
 
+int verify_password(void);
 int validate_password(int password_size, int password_limit); 
 void ask_password(char* user_password, int password_limit); 
 void ask_confirm_password(char* confirm_password, int password_limit); 

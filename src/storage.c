@@ -1,54 +1,83 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 
 #include "storage.h"
 
-/* 
- * @brief Save salt and hash with salt in a file. 
- * Note: 
- * First line is Salt
- * Second line is Hash with salt
+/**
+ * @brief Saves the cryptographic salt and hash to the storage file.
  *
- * @param salt: need the generated salt which is hex
- * @param hash_with_salt: accept hashed password+salt
- * @return integer -> 0 if it was successful and 1 if not
- * */
-int save(char* salt, char* hash_with_salt) {
-    FILE* fileptr = fopen("dataStorage/hashes.txt", "a"); // I use a instead of w to add hashes not to over write it again.
-    
-    if (fileptr == NULL) {
-        printf("Error opening file!\n");
+ * This function opens the "dataStorage/hashes.txt" file in write mode, 
+ * overwriting any existing data to ensure only one active record exists. 
+ * It appends a newline character to each entry.
+ *
+ * @note File structure output:
+ *       - Line 1: Hex-encoded salt
+ *       - Line 2: Password hash with salt
+ *
+ * @param[in] salt_hex  Pointer to the null-terminated, hex-encoded salt string.
+ * @param[in] hash      Pointer to the null-terminated password hash string.
+ *
+ * @return int Status code of the operation.
+ * @retval 0  Success: Data was successfully written to the file.
+ * @retval 1  Failure: File could not be opened for writing.
+ */
+int save_hash(const char* salt_hex, const char* hash) {
+    FILE* file = fopen("dataStorage/hashes.txt", "w"); // for now I use 'w' becasue I want to have one salt and hash
+
+    if (file == NULL) {
+        printf("Error opening file.\n");
         return 1;
     }
 
-    fprintf(fileptr, "%s\n%s\n", salt, hash_with_salt);
-    fclose(fileptr);
-    printf("Hash saved!\n");
+    fprintf(file, "%s\n%s\n", salt_hex, hash);
+    fclose(file);
+    printf("Hash saved.\n");
     return 0;
 }
 
-/* 
- * This function will read data from dataStorage and it will display all the data
- * Note: 
- * First line is Salt
- * Second line is Hash with salt
+/**
+ * @brief Loads the stored cryptographic salt and hash from the storage file.
  *
- * @return integer -> 0 if it was successful and 1 if not
- * */
-int read_data() {
-    FILE* fileptr = fopen("dataStorage/hashes.txt", "r"); 
+ * This function opens the "dataStorage/hashes.txt" file and extracts the 
+ * data line by line. It automatically strips trailing newline characters 
+ * from the outputs.
+ *
+ * @note File structure assumptions:
+ *       - Line 1: Hex-encoded salt
+ *       - Line 2: Password hash with salt
+ *
+ * @param[out] salt_hex   Pointer to the buffer where the salt string will be stored.
+ * @param[in]  salt_size  Maximum capacity of the salt_hex buffer (including null terminator).
+ * @param[out] hash       Pointer to the buffer where the hash string will be stored.
+ * @param[in]  hash_size  Maximum capacity of the hash buffer (including null terminator).
+ *
+ * @return int Status code of the operation.
+ * @retval 0  Success: Both salt and hash were read and processed cleanly.
+ * @retval 1  Failure: File could not be opened, or reading failed due to EOF/corruption.
+ */
+int load_hash(char* salt_hex, int salt_size, char* hash, int hash_size) {
+    FILE* file = fopen("dataStorage/hashes.txt", "r");
 
-    if (fileptr == NULL) {
-        printf("Error opening file!\n");
+    if (file == NULL) {
+        printf("Error opening file.\n");
         return 1;
     }
-    
-    char buffer[256]; // I'll define the number later
-    while (fgets(buffer, sizeof(buffer), fileptr) != NULL) {
-        printf("%s", buffer);
+
+    if (fgets(salt_hex, salt_size, file) == NULL) {
+        fclose(file);
+        return 1;
     }
 
-    fclose(fileptr);
+    if (fgets(hash, hash_size, file) == NULL) {
+        fclose(file);
+        return 1;
+    }
+
+    salt_hex[strcspn(salt_hex, "\n")] = '\0';
+    hash[strcspn(hash, "\n")] = '\0';
+
+    fclose(file);
 
     return 0;
 }
