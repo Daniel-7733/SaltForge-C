@@ -168,11 +168,11 @@ int process_the_password(char* password) {
 
 
     if (!sha256_hex(
-                (const unsigned char*)password,
-                strlen(password),
-                hash,
-                sizeof(hash)
-                )) {
+            (const unsigned char*)password_with_salt,
+            strlen(password_with_salt),
+            hash,
+            sizeof(hash)
+        )) {
         printf("Hashing failed.\n");
         return 1;
     }
