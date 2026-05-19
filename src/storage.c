@@ -64,20 +64,26 @@ int load_hash(char* salt_hex, int salt_size, char* hash, int hash_size) {
         return 1;
     }
 
-    if (fgets(salt_hex, salt_size, file) == NULL) {
-        fclose(file);
-        return 1;
+    char line_buf[256];  // generous temp buffer to always capture the full line + \n
+
+    if (fgets(line_buf, sizeof(line_buf), file) == NULL) {
+        fclose(file); 
+        return 1; 
     }
 
-    if (fgets(hash, hash_size, file) == NULL) {
-        fclose(file);
-        return 1;
+    line_buf[strcspn(line_buf, "\n")] = '\0';
+    strncpy(salt_hex, line_buf, salt_size - 1);
+    salt_hex[salt_size - 1] = '\0';
+
+    if (fgets(line_buf, sizeof(line_buf), file) == NULL) {
+        fclose(file); 
+        return 1; 
     }
 
-    salt_hex[strcspn(salt_hex, "\n")] = '\0';
-    hash[strcspn(hash, "\n")] = '\0';
+    line_buf[strcspn(line_buf, "\n")] = '\0';
+    strncpy(hash, line_buf, hash_size - 1);
+    hash[hash_size - 1] = '\0';
 
     fclose(file);
-
     return 0;
 }
